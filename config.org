@@ -1,0 +1,373 @@
+#+TITLE: My GNU Emacs configuration
+ 
+* Name
+
+* Initial customization 
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<f5>") 'revert-buffer)
+(global-hl-line-mode t)
+#+END_SRC
+* Previous customizations
+
+#+BEGIN_SRC emacs-lisp 
+  (setq custom-file (concat init-dir "custom.el"))
+
+  (load custom-file :noerror)
+#+END_SRC
+
+* Installing Melpa
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/"))
+(when (< emacs-major-version 24)
+  ;; For important compatibility libraries like cl-lib
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+(package-initialize)
+
+#+end_src
+
+* Use Packages
+** The package
+Use package installs packages from the config file. 
+#+begin_src emacs-lisp
+(unless (package-installed-p 'use-package)
+	(package-refresh-contents)
+	(package-install 'use-package))
+#+end_src
+
+** Try
+Gives the ability to try packages without installing them. 
+#+BEGIN_SRC emacs-lisp
+(use-package try
+	:ensure t)
+#+end_src
+** Version control
+
+#+begin_src emacs-lisp
+  ;; Custom binding for magit-status
+  (use-package magit
+    :config
+    (global-set-key (kbd "C-c m") 'magit-status))
+    
+      (use-package magit
+    :ensure t
+    :bind (("C-c m" . magit-status)))
+
+  (use-package magit-gitflow
+    :ensure t
+    :config
+    (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
+
+(use-package git-gutter-fringe
+     :ensure t)
+(require 'git-gutter-fringe)
+(global-git-gutter-mode t)
+#+end_src
+** Wakatime
+#+BEGIN_SRC emacs-lisp
+(use-package wakatime-mode
+     :ensure t) 
+(setq wakatime-python-bin "python3")
+(setq exec-path (append exec-path '("~/.local/bin")))
+(if (eq system-type 'windows-nt)
+     (progn
+      (setq wakatime-python-bin "python")
+      ;(setq wakatime-cli-path "\\WakaTime\\wakatime-master\\wakatime\\cli.py")
+      (setq wakatime-cli-path "c:/Users/Magnus/AppData/Roaming/WakaTime/wakatime-master/wakatime/cli.py")
+      ))
+(if (eq system-type 'gnu/linux)
+    (progn
+      (if (file-exists-p "/usr/local/bin/wakatime")
+          (progn
+            (setq wakatime-python-bin "python")
+            (setq wakatime-cli-path "/usr/local/bin/wakatime")))
+       (if (file-exists-p "/usr/bin/wakatime")
+          (progn
+            (setq wakatime-python-bin "python")
+            (setq wakatime-cli-path "/usr/bin/wakatime")))))
+(global-wakatime-mode t)
+#+END_SRC
+** Which key
+brings up help on key combinations. 
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+	:ensure t  
+	:config
+	(which-key-mode))
+#+END_SRC
+
+** Ace window
+   #+BEGIN_SRC emacs-lisp
+(use-package ace-window
+  :ensure t
+  :init
+(global-set-key [remap other-window] 'ace-window))
+   #+END_SRC
+** Avy
+#+BEGIN_SRC emacs-lisp
+(use-package avy
+  :ensure t
+  :bind ("M-s" . avy-goto-char))
+#+END_SRC
+** Auro Complete
+#+BEGIN_SRC emacs-lisp
+(use-package auto-complete
+  :ensure t
+  :init
+  (progn
+    (ac-config-default)
+    (global-auto-complete-mode t)
+    ))
+#+END_SRC
+** Undo Tre
+#+BEGIN_SRC emacs-lisp
+(use-package undo-tree
+:ensure t
+  :init
+    (global-undo-tree-mode))
+#+END_SRC
+** Highlight-symbol
+
+todo
+* Moving around
+  Be sure to just ask for y/n instead of yes/no.
+
+#+BEGIN_SRC emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p) 
+#+END_SRC
+** counsel
+   #+BEGIN_SRC emacs-lisp
+  (use-package counsel
+    :ensure t
+    :bind
+    (("M-x" . counsel-M-x)
+     ("M-y" . counsel-yank-pop)
+     :map ivy-minibuffer-map
+     ("M-y" . ivy-next-line)))
+
+(defalias 'list-buffers 'ibuffer)
+#+END_SRC
+** Swiper
+   #+BEGIN_SRC emacs-lisp
+   (use-package swiper
+     :pin melpa
+     :diminish ivy-mode
+     :ensure t
+     :bind*
+     (("C-s" . swiper)
+      ("C-c C-r" . ivy-resume)
+      ("C-x C-f" . counsel-find-file)
+      ("C-c h f" . counsel-describe-function)
+      ("C-c h v" . counsel-describe-variable)
+      ("C-c i u" . counsel-unicode-char)
+      ("M-i" . counsel-imenu)
+      ("C-c g" . counsel-git)
+      ("C-c j" . counsel-git-grep)
+      ("C-c k" . counsel-ag)
+      ("C-c l" . scounsel-locate))
+     :config
+     (progn
+       (ivy-mode 1)
+       (setq ivy-use-virtual-buffers t)
+       (define-key read-expression-map (kbd "C-r") #'counsel-expression-history)
+       (ivy-set-actions
+	'counsel-find-file
+	'(("d" (lambda (x) (delete-file (expand-file-name x)))
+           "delete"
+           )))
+       (ivy-set-actions
+	'ivy-switch-buffer
+	'(("k"
+           (lambda (x)
+             (kill-buffer x)
+             (ivy--reset-state ivy-last))
+           "kill")
+          ("j"
+           ivy--switch-buffer-other-window-action
+           "other window")))))
+#+END_SRC
+** Counsel projectile
+   #+BEGIN_SRC emacs-lisp
+  (use-package counsel-projectile
+    :ensure t
+    :config
+    (counsel-projectile-on))
+#+END_SRC
+** Ivy hydra
+
+   #+BEGIN_SRC emacs-lisp
+  (use-package ivy-hydra :ensure t)
+#+END_SRC
+
+** Other
+   From [[http://pragmaticemacs.com/emacs/dont-kill-buffer-kill-this-buffer-instead/][Pragmatic Emacs]] a more concise way to kill the buffer.
+   
+   #+begin_src emacs-lisp 
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
+#+end_src
+
+Mousewheel scrolling can be quite annoying, lets fix it to scroll
+smoothly.
+
+#+begin_src emacs-lisp
+(setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
+(setq mouse-wheel-progressive-speed nil)
+#+end_src
+
+* Look and feel
+Theme
+#+BEGIN_SRC emacs-lisp
+(use-package doom-themes
+  :init (progn (load-theme 'doom-one t t)
+               (enable-theme 'doom-one))
+  :defer t
+  :ensure t)
+#+END_SRC
+Colum number
+#+BEGIN_SRC emacs-lisp
+(column-number-mode t)
+(global-linum-mode t)
+#+END_SRC
+New/removed line indicator
+#+BEGIN_SRC emacs-lisp
+(use-package git-gutter-fringe+
+     :ensure t)
+(require 'git-gutter-fringe+)
+#+END_SRC
+Remove splash screen
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-splash-screen t)
+#+END_SRC
+Set default directory
+#+BEGIN_SRC emacs-lisp
+(setq default-directory "~/")
+#+END_SRC
+Enable menu bar
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode t)
+#+END_SRC
+Remove toolbar
+#+BEGIN_SRC emacs-lisp
+(tool-bar-mode -1)
+#+END_SRC
+Remove scroll bar
+#+BEGIN_SRC emacs-lisp
+(scroll-bar-mode -1)
+#+END_SRC
+Set windows title
+#+BEGIN_SRC emacs-lisp
+(setq frame-title-format "emacs")
+#+END_SRC
+Start i fullscreen
+#+BEGIN_SRC emacs-lisp
+(custom-set-variables
+ '(initial-frame-alist (quote ((fullscreen . maximized)))))
+#+END_SRC
+Splits window in two
+#+BEGIN_SRC emacs-lisp
+;(split-window-right)
+#+END_SRC
+Delete region when typing over it
+#+BEGIN_SRC emacs-lisp
+(delete-selection-mode 1)
+
+#+END_SRC
+Highlight parentheses
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode 1)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(electric-pair-mode 1)
+
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook))
+
+(use-package fireplace
+:ensure)
+  
+#+END_SRC
+
+* Latex
+#+BEGIN_SRC emacs-lisp
+(use-package tex
+  :ensure auctex)
+
+(setq TeX-auto-save t)
+(setq TeX-parse-self t) 
+(setq TeX-save-query nil)
+(setq TeX-PDF-mode t)
+
+(setq-default TeX-master nil)
+
+(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+
+#+END_SRC
+Spell check 
+#+BEGIN_SRC emacs-lisp
+(if (eq system-type 'windows-nt)
+     
+
+(add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/"))
+
+(use-package flyspell-correct-popup 
+    :ensure t)
+    
+(require 'auto-complete)
+(require 'auto-complete-auctex)
+(add-hook 'LaTeX-mode-hook 'auto-complete-mode)
+
+  
+(use-package auto-complete-auctex
+    :ensure t)
+#+END_SRC
+
+* Markdown
+
+Markdown is a great way to write documentation, not as good as org-mode of course, but generally accepted as a standard.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package markdown-mode
+    :ensure t)
+#+END_SRC
+
+* Org mode
+#+BEGIN_SRC emacs-lisp
+(setq org-src-fontify-natively t)
+#+END_SRC
+* Programming
+#+BEGIN_SRC emacs-lisp
+(use-package yaml-mode 
+:mode "\\.yaml\\'")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;(use-package paredit 
+;:ensure t)
+
+
+(use-package aggressive-indent
+  :ensure t)
+
+(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+(add-hook 'vhdl-mode-hook #'aggressive-indent-mode)
+
+
+
+(add-hook 'vhdl-mode-hook 'auto-complete-mode)
+(add-hook 'org-mode-hook 'auto-complete-mode)
+
+;(use-package smex
+;  :ensure t 
+;  :bind ("M-x" . smex)) 
+
+#+END_SRC
+
