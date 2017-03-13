@@ -352,9 +352,6 @@ Spell check
 (require 'auto-complete-auctex)
 (add-hook 'LaTeX-mode-hook 'auto-complete-mode)
 
-  
-(use-package auto-complete-auctex
-    :ensure t)
 #+END_SRC
 
 * Markdown
