@@ -48,10 +48,6 @@ Gives the ability to try packages without installing them.
 #+begin_src emacs-lisp
   ;; Custom binding for magit-status
   (use-package magit
-    :config
-    (global-set-key (kbd "C-c m") 'magit-status))
-    
-      (use-package magit
     :ensure t
     :bind (("C-c m" . magit-status)))
 
@@ -128,14 +124,39 @@ brings up help on key combinations.
   :init
     (global-undo-tree-mode))
 #+END_SRC
-** Highlight-symbol
-
-todo
+** Neotree
+#+BEGIN_SRC emacs-lisp
+(require 'use-package)
+(use-package neotree
+  :ensure t
+  :bind (("<f8>" . neotree-toggle))
+  :defer
+  :config
+  (progn
+    (setq-default neo-smart-open t)    ;  every time when the neotree window is
+                                       ;  opened, it will try to find current
+                                       ;  file and jump to node.
+    (setq-default neo-dont-be-alone t) ; Don't allow neotree to be the only open
+                                       ; window
+))
+#+END_SRC
 * Moving around
+** Yes No?
   Be sure to just ask for y/n instead of yes/no.
 
 #+BEGIN_SRC emacs-lisp
 (fset 'yes-or-no-p 'y-or-n-p) 
+#+END_SRC
+** Shrink Enlarge window
+#+BEGIN_SRC emacs-lisp
+    (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+    (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+    (global-set-key (kbd "S-C-<down>") 'shrink-window)
+    (global-set-key (kbd "S-C-<up>") 'enlarge-window)
+#+END_SRC
+** Register
+#+BEGIN_SRC emacs-lisp
+(set-register ?e '(file . "~/.emacs.d/config.org"))
 #+END_SRC
 ** counsel
    #+BEGIN_SRC emacs-lisp
@@ -217,6 +238,7 @@ smoothly.
 #+end_src
 
 * Look and feel
+** part 1
 Theme
 #+BEGIN_SRC emacs-lisp
 (use-package doom-themes
@@ -236,6 +258,7 @@ New/removed line indicator
      :ensure t)
 (require 'git-gutter-fringe+)
 #+END_SRC
+** part 2
 Remove splash screen
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-splash-screen t)
@@ -256,6 +279,7 @@ Remove scroll bar
 #+BEGIN_SRC emacs-lisp
 (scroll-bar-mode -1)
 #+END_SRC
+** part 3
 Set windows title
 #+BEGIN_SRC emacs-lisp
 (setq frame-title-format "emacs")
@@ -269,10 +293,10 @@ Splits window in two
 #+BEGIN_SRC emacs-lisp
 ;(split-window-right)
 #+END_SRC
+** part 4
 Delete region when typing over it
 #+BEGIN_SRC emacs-lisp
 (delete-selection-mode 1)
-
 #+END_SRC
 Highlight parentheses
 #+BEGIN_SRC emacs-lisp
@@ -342,6 +366,7 @@ Markdown is a great way to write documentation, not as good as org-mode of cours
 * Org mode
 #+BEGIN_SRC emacs-lisp
 (setq org-src-fontify-natively t)
+(add-hook 'text-mode-hook #'turn-on-visual-line-mode)
 #+END_SRC
 * Programming
 #+BEGIN_SRC emacs-lisp
