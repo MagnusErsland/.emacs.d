@@ -245,7 +245,10 @@ Theme
   :init (progn (load-theme 'doom-one t t)
                (enable-theme 'doom-one))
   :defer t
-  :ensure t)
+  :ensure t
+  :config
+(setq  doom-one-brighter-comments t)
+)
 #+END_SRC
 Colum number
 #+BEGIN_SRC emacs-lisp
