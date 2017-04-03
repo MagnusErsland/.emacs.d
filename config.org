@@ -348,6 +348,8 @@ Spell check
 (use-package flyspell-correct-popup 
     :ensure t)
 
+(setq-default ispell-program-name "aspell")
+
 (use-package auto-complete-auctex 
     :ensure t)
     
