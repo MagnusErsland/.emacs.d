@@ -1,7 +1,7 @@
 #+TITLE: My GNU Emacs configuration
  
 * Name
-
+(setq user-full-name "Magnus Ersland")
 * Initial customization 
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "<f5>") 'revert-buffer)
@@ -405,13 +405,15 @@ Markdown is a great way to write documentation, not as good as org-mode of cours
 ** VHDL
 
 #+BEGIN_SRC emacs-lisp
-
+(custom-set-variables
  '(vhdl-clock-edge-condition (quote function))
  '(vhdl-end-comment-column 130)
  '(vhdl-indent-comment-like-next-code-line nil)
  '(vhdl-prompt-for-comments nil)
  '(vhdl-self-insert-comments nil)
- '(vhdl-standard (quote (8 nil)))
  '(vhdl-underscore-is-part-of-word t)
+ '(vhdl-standard (quote (8 nil)))
+ '(vhdl-testbench-include-configuration nil)
+)
 
 #+END_SRC
