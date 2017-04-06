@@ -372,6 +372,7 @@ Markdown is a great way to write documentation, not as good as org-mode of cours
 (add-hook 'text-mode-hook #'turn-on-visual-line-mode)
 #+END_SRC
 * Programming
+** YAML
 #+BEGIN_SRC emacs-lisp
 (use-package yaml-mode 
 :mode "\\.yaml\\'")
@@ -382,11 +383,11 @@ Markdown is a great way to write documentation, not as good as org-mode of cours
 ;:ensure t)
 
 
-(use-package aggressive-indent
-  :ensure t)
+;(use-package aggressive-indent
+;  :ensure t)
 
-(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
-(add-hook 'vhdl-mode-hook #'aggressive-indent-mode)
+;(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+;(add-hook 'vhdl-mode-hook #'aggressive-indent-mode)
 
 
 
@@ -399,3 +400,16 @@ Markdown is a great way to write documentation, not as good as org-mode of cours
 
 #+END_SRC
 
+** VHDL
+
+#+BEGIN_SRC emacs-lisp
+
+ '(vhdl-clock-edge-condition (quote function))
+ '(vhdl-end-comment-column 130)
+ '(vhdl-indent-comment-like-next-code-line nil)
+ '(vhdl-prompt-for-comments nil)
+ '(vhdl-self-insert-comments nil)
+ '(vhdl-standard (quote (8 nil)))
+ '(vhdl-underscore-is-part-of-word t)
+
+#+END_SRC
