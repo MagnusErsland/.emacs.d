@@ -1,17 +1,19 @@
 #+TITLE: My GNU Emacs configuration
  
-* Name
+* User details
+#+BEGIN_SRC emacs-lisp
 (setq user-full-name "Magnus Ersland")
+#+END_SRC
 * Initial customization 
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "<f5>") 'revert-buffer)
-(global-hl-line-mode t)
 #+END_SRC
 * Previous customizations
+Change the Destination of Customization Settings
 
+These are the settings saved from the customize menus and prompts within Emacs. 
 #+BEGIN_SRC emacs-lisp 
   (setq custom-file (concat init-dir "custom.el"))
-
   (load custom-file :noerror)
 #+END_SRC
 
@@ -27,10 +29,11 @@
 (package-initialize)
 
 #+end_src
-
+  
 * Use Packages
 ** The package
 Use package installs packages from the config file. 
+https://github.com/jwiegley/use-package
 #+begin_src emacs-lisp
 (unless (package-installed-p 'use-package)
 	(package-refresh-contents)
@@ -44,7 +47,7 @@ Gives the ability to try packages without installing them.
 	:ensure t)
 #+end_src
 ** Version control
-
+Git for emacs
 #+begin_src emacs-lisp
   ;; Custom binding for magit-status
   (use-package magit
@@ -57,11 +60,15 @@ Gives the ability to try packages without installing them.
     (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
 
 (use-package git-gutter-fringe
-     :ensure t)
-(require 'git-gutter-fringe)
-(global-git-gutter-mode t)
+     :ensure t
+  :init 
+  (global-git-gutter-mode t)
+)
+;(require 'git-gutter-fringe)
+;(global-git-gutter-mode t)
 #+end_src
 ** Wakatime
+Time tracking
 #+BEGIN_SRC emacs-lisp
 (use-package wakatime-mode
      :ensure t) 
@@ -86,7 +93,7 @@ Gives the ability to try packages without installing them.
 (global-wakatime-mode t)
 #+END_SRC
 ** Which key
-brings up help on key combinations. 
+Brings up help on key combinations. 
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
 	:ensure t  
@@ -95,27 +102,34 @@ brings up help on key combinations.
 #+END_SRC
 
 ** Ace window
+GNU Emacs package for selecting a window to switch to
+https://github.com/abo-abo/ace-window
    #+BEGIN_SRC emacs-lisp
 (use-package ace-window
   :ensure t
   :init
 (global-set-key [remap other-window] 'ace-window))
    #+END_SRC
-** Avy
-#+BEGIN_SRC emacs-lisp
-(use-package avy
-  :ensure t
-  :bind ("M-s" . avy-goto-char))
-#+END_SRC
-** Auro Complete
+** Auto Complete
+An Intelligent auto-completion extension for Emacs
+https://github.com/auto-complete/auto-complete
 #+BEGIN_SRC emacs-lisp
 (use-package auto-complete
   :ensure t
+:disabled
   :init
   (progn
     (ac-config-default)
     (global-auto-complete-mode t)
     ))
+#+END_SRC
+** Company-mode
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :ensure t
+  :defer t
+  :init (global-company-mode)
+)
 #+END_SRC
 ** Undo Tre
 #+BEGIN_SRC emacs-lisp
@@ -139,6 +153,13 @@ brings up help on key combinations.
     (setq-default neo-dont-be-alone t) ; Don't allow neotree to be the only open
                                        ; window
 ))
+#+END_SRC
+** flycheck
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :ensure t
+  :init 
+(global-flycheck-mode))
 #+END_SRC
 * Moving around
 ** Yes No?
@@ -247,75 +268,76 @@ Theme
   :defer t
   :ensure t
   :config
-(setq  doom-one-brighter-comments t)
+(setq doom-one-brighter-comments t)
+
 )
 #+END_SRC
+
 Colum number
 #+BEGIN_SRC emacs-lisp
 (column-number-mode t)
 (global-linum-mode t)
 #+END_SRC
+
 New/removed line indicator
 #+BEGIN_SRC emacs-lisp
 (use-package git-gutter-fringe+
      :ensure t)
 (require 'git-gutter-fringe+)
 #+END_SRC
+
 ** part 2
 Remove splash screen
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-splash-screen t)
 #+END_SRC
+
 Set default directory
 #+BEGIN_SRC emacs-lisp
 (setq default-directory "~/")
 #+END_SRC
+
 Enable menu bar
 #+BEGIN_SRC emacs-lisp
 (menu-bar-mode t)
 #+END_SRC
+
 Remove toolbar
 #+BEGIN_SRC emacs-lisp
 (tool-bar-mode -1)
 #+END_SRC
+
 Remove scroll bar
 #+BEGIN_SRC emacs-lisp
 (scroll-bar-mode -1)
 #+END_SRC
+
 ** part 3
 Set windows title
 #+BEGIN_SRC emacs-lisp
 (setq frame-title-format "emacs")
 #+END_SRC
+
 Start i fullscreen
 #+BEGIN_SRC emacs-lisp
 (custom-set-variables
  '(initial-frame-alist (quote ((fullscreen . maximized)))))
 #+END_SRC
-Splits window in two
-#+BEGIN_SRC emacs-lisp
-;(split-window-right)
-#+END_SRC
+
 ** part 4
 Delete region when typing over it
 #+BEGIN_SRC emacs-lisp
 (delete-selection-mode 1)
 #+END_SRC
+
 Highlight parentheses
 #+BEGIN_SRC emacs-lisp
 (show-paren-mode 1)
 #+END_SRC
 
+Electric Pair mode, a global minor mode, provides a way to easily insert matching delimiters. Whenever you insert an opening delimiter, the matching closing delimiter is automatically inserted as well, leaving point between the two. 
 #+BEGIN_SRC emacs-lisp
 (electric-pair-mode 1)
-
-(use-package dashboard
-  :config
-  (dashboard-setup-startup-hook))
-
-(use-package fireplace
-:ensure)
-  
 #+END_SRC
 
 * Latex
@@ -351,11 +373,12 @@ Spell check
 (setq-default ispell-program-name "aspell")
 
 (use-package auto-complete-auctex 
+:disabled
     :ensure t)
     
-(require 'auto-complete)
-(require 'auto-complete-auctex)
-(add-hook 'LaTeX-mode-hook 'auto-complete-mode)
+;(require 'auto-complete)
+;(require 'auto-complete-auctex)
+;(add-hook 'LaTeX-mode-hook 'auto-complete-mode)
 
 #+END_SRC
 
@@ -393,8 +416,8 @@ Markdown is a great way to write documentation, not as good as org-mode of cours
 
 
 
-(add-hook 'vhdl-mode-hook 'auto-complete-mode)
-(add-hook 'org-mode-hook 'auto-complete-mode)
+;(add-hook 'vhdl-mode-hook 'auto-complete-mode)
+;(add-hook 'org-mode-hook 'auto-complete-mode)
 
 ;(use-package smex
 ;  :ensure t 
@@ -415,5 +438,46 @@ Markdown is a great way to write documentation, not as good as org-mode of cours
  '(vhdl-standard (quote (8 nil)))
  '(vhdl-testbench-include-configuration nil)
 )
+#+END_SRC
+** PlatformIO
+#+BEGIN_SRC emacs-lisp
+(use-package platformio-mode
+:ensure t)
+
+(use-package irony
+  :ensure t
+  :commands (irony-mode))
+
+(use-package flycheck-irony
+  :ensure t
+  :defer 2
+ ; :init (add-hook 'flycheck-mode-hook #'flycheck-irony-setup)
+)
+
+(require 'platformio-mode)
+
+;; Add the required company backend.
+(add-to-list 'company-backends 'company-irony)
+
+;; Enable irony for all c++ files, and platformio-mode only
+;; when needed (platformio.ini present in project root).
+(add-hook 'c++-mode-hook (lambda ()
+                           (irony-mode)
+                           (irony-eldoc)
+                           (platformio-conditionally-enable)))
+
+;; Use irony's completion functions.
+(add-hook 'irony-mode-hook
+          (lambda ()
+            (define-key irony-mode-map [remap completion-at-point]
+              'irony-completion-at-point-async)
+
+            (define-key irony-mode-map [remap complete-symbol]
+              'irony-completion-at-point-async)
+
+            (irony-cdb-autosetup-compile-options)))
+            
+;; Setup irony for flycheck.
+(add-hook 'flycheck-mode-hook 'flycheck-irony-setup)
 
 #+END_SRC
