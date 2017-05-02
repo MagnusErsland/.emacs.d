@@ -12,6 +12,7 @@ smex-items
 ac-comphist.dat
 config.el
 custom.el
+.mc-lists.el
 
 # Org-mode
 .org-id-locations

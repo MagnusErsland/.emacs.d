@@ -46,7 +46,7 @@ Gives the ability to try packages without installing them.
 (use-package try
 	:ensure t)
 #+end_src
-** Version control
+** Magit
 Git for emacs
 #+begin_src emacs-lisp
   ;; Custom binding for magit-status
@@ -110,13 +110,13 @@ https://github.com/abo-abo/ace-window
   :init
 (global-set-key [remap other-window] 'ace-window))
    #+END_SRC
-** Auto Complete
+** Auto Complete (disabled)
 An Intelligent auto-completion extension for Emacs
 https://github.com/auto-complete/auto-complete
 #+BEGIN_SRC emacs-lisp
 (use-package auto-complete
   :ensure t
-:disabled
+  :disabled 
   :init
   (progn
     (ac-config-default)
