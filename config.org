@@ -360,7 +360,7 @@ Electric Pair mode, a global minor mode, provides a way to easily insert matchin
 (setq reftex-plug-into-AUCTeX t)
 
 #+END_SRC
-Spell check 
+* Spell check 
 #+BEGIN_SRC emacs-lisp
 (if (eq system-type 'windows-nt)
      
